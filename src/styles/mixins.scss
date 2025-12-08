@@ -1,0 +1,224 @@
+// Importar variáveis
+@import './variables.scss';
+
+// Mixin de Responsividade
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == "xs" {
+    @media (max-width: $breakpoint-sm - 1) {
+      @content;
+    }
+  } @else if $breakpoint == "sm" {
+    @media (max-width: $breakpoint-md - 1) {
+      @content;
+    }
+  } @else if ($breakpoint == "md") {
+    @media (max-width: $breakpoint-lg - 1) {
+      @content;
+    }
+  } @else if ($breakpoint == "lg") {
+    @media (max-width: $breakpoint-xl - 1) {
+      @content;
+    }
+  } @else if ($breakpoint == "xl") {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  }
+}
+
+// Mixin de Flexbox
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Mixin de Grid
+@mixin grid($columns: 3, $gap: $grid-gap) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+// Mixin de Truncate Text
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Mixin de Aspect Ratio
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  
+  &::before {
+    content: '';
+    display: block;
+    padding-bottom: calc(($height / $width) * 100%);
+  }
+  
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Mixin de Cover Background
+@mixin bg-cover {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+// Mixin de Absolute Center
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Mixin de Button Reset
+@mixin button-reset {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+// Mixin de Card
+@mixin card($padding: $spacing-md, $radius: $radius-md) {
+  background: $white;
+  border-radius: $radius;
+  padding: $padding;
+  box-shadow: $shadow-sm;
+  transition: box-shadow $transition-base;
+  
+  &:hover {
+    box-shadow: $shadow-lg;
+  }
+}
+
+// Mixin de Hover Effect
+@mixin hover-lift {
+  transition: transform $transition-base, box-shadow $transition-base;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+// Mixin de Gradient
+@mixin gradient($direction: to right, $color1: $primary-color, $color2: $primary-dark) {
+  background: linear-gradient($direction, $color1, $color2);
+}
+
+// Mixin de Glass Effect
+@mixin glass-effect($blur: 10px, $opacity: 0.7) {
+  background: rgba($white, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+}
+
+// Mixin de Hide Scrollbar
+@mixin hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Mixin de Container
+@mixin container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+  
+  @include respond-to(md) {
+    padding: 0 $spacing-md;
+  }
+  
+  @include respond-to(sm) {
+    padding: 0 $spacing-sm;
+  }
+}
+
+// Mixin de Animation
+@mixin animation($name, $duration: 0.3s, $timing: ease, $delay: 0s) {
+  animation: $name $duration $timing $delay;
+}
+
+// Mixin de Focus Visible
+@mixin focus-visible {
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+// Mixin de Placeholder
+@mixin placeholder {
+  &::placeholder {
+    @content;
+  }
+  
+  &::-webkit-input-placeholder {
+    @content;
+  }
+  
+  &::-moz-placeholder {
+    @content;
+  }
+  
+  &:-ms-input-placeholder {
+    @content;
+  }
+}
+
+// Mixin de Selection
+@mixin selection {
+  ::selection {
+    @content;
+  }
+  
+  ::-moz-selection {
+    @content;
+  }
+}
+
+// Uso dos mixins:
+// @include respond-to(md) { ... }
+// @include flex-center;
+// @include grid(4, 1.5rem);
+// @include truncate(2);
+// @include card;
+// @include hover-lift;
