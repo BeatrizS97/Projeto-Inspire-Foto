@@ -11,8 +11,8 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Chave da API do Unsplash não configurada.' });
     }
 
-    const response = await axios.get('https://api.unsplash.com/search/photos', {
-      params: {
+   const response = await axios.get('https://api.unsplash.com/search/photos', {
+        params: {
         query,
         orientation,
         per_page: parseInt(per_page),
