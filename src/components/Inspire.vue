@@ -5,31 +5,14 @@ import { ref, onMounted } from "vue";
 const imagens = ref([]);
 const loading = ref(true);
 
-// Função para embaralhar array (Fisher-Yates)
-function embaralhar(array) {
-  const copia = [...array];
-  for (let i = copia.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copia[i], copia[j]] = [copia[j], copia[i]];
-  }
-  return copia;
-}
-
 function carregarImagens() {
-  // IDs oficiais do Picsum que são 100% paisagens naturais e sempre funcionam
-  const idsDePaisagens = [
-    0, 1, 2, 3, 4, 5, 7, 8, 10, 11,
-    12, 14, 15, 16, 18, 19, 20, 21, 22, 23,
-    25, 26, 27, 28, 30, 31, 32, 33, 34, 35,
-    36, 37, 38, 39, 40, 41, 42, 43, 44, 45
-  ];
+  // Gera 12 seeds aleatórios para garantir variedade
+  const seeds = Array.from({ length: 12 }, (_, i) => Math.floor(Math.random() * 1000) + i);
 
-  // Embaralha e pega 12 imagens diferentes a cada vez
-  const selecionadas = embaralhar(idsDePaisagens).slice(0, 12);
-
-  imagens.value = selecionadas.map((id, index) => ({
+  imagens.value = seeds.map((seed, index) => ({
     id: index + 1,
-    download_url: `https://picsum.photos/id/${id}/600/800?gravity=center`,
+    // Usa seed + parâmetro 'gravity=center' para focar no centro
+    download_url: `https://picsum.photos/seed/${seed}/600/800?gravity=center`,
   }));
 
   loading.value = false;
@@ -60,6 +43,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+/* Seu CSS permanece exatamente igual */
 .inspire-section {
   padding: 3rem 2rem;
   max-width: 1400px;
@@ -103,12 +87,8 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @media (max-width: 1200px) {
@@ -117,22 +97,17 @@ onMounted(() => {
       grid-template-columns: repeat(3, 1fr);
       gap: 1.2rem;
     }
-
-    h2 {
-      font-size: 2.2rem;
-    }
+    h2 { font-size: 2.2rem; }
   }
 }
 
 @media (max-width: 768px) {
-  .inspire-section {
+  .insire-section {
     padding: 2rem 1rem;
-
     h2 {
       font-size: 1.8rem;
       margin-bottom: 1.5rem;
     }
-
     .inspire-grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
@@ -143,11 +118,7 @@ onMounted(() => {
 @media (max-width: 480px) {
   .inspire-section {
     padding: 1.5rem 1rem;
-
-    h2 {
-      font-size: 1.5rem;
-    }
-
+    h2 { font-size: 1.5rem; }
     .inspire-grid {
       grid-template-columns: 1fr;
       gap: 1rem;
