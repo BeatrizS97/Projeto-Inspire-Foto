@@ -1,37 +1,29 @@
-// /api/unsplash.js
-import axios from 'axios';
-
-export default async function handler(req, res) {
+async function carregarImagens() {
   try {
-    const { query = 'landscape', orientation = 'landscape', per_page = 12 } = req.query;
+    loading.value = true;
 
-    const CLIENT_ID = process.env.UNSPLASH_CLIENT_ID;
-    if (!CLIENT_ID) {
-      console.error('❌ Chave da API do Unsplash não configurada!');
-      return res.status(500).json({ error: 'Chave da API do Unsplash não configurada.' });
-    }
-
-    const response = await axios.get('https://api.unsplash.com/search/photos', {
+    const res = await axios.get("/api/unsplash", {
       params: {
-        query,
-        orientation,
-        per_page: parseInt(per_page),
+        query: "landscape",
+        orientation: "landscape",
+        per_page: 12,
         page: Math.floor(Math.random() * 10) + 1,
-      },
-      headers: {
-        Authorization: `Client-ID ${CLIENT_ID}`,
       },
     });
 
-    const images = response.data.results.map(photo => ({
-      id: photo.id,
-      download_url: photo.urls.regular,
-    }));
+    console.log('Resposta da API:', res.data); // 👈 Adicione esta linha!
 
-    res.status(200).json({ results: images });
+    imagens.value = res.data.results
+      .filter(photo => photo.urls && photo.urls.regular)
+      .map(photo => ({
+        id: photo.id,
+        download_url: photo.urls.regular,
+      }));
 
   } catch (error) {
-    console.error('🚨 Erro na função:', error.message);
-    res.status(500).json({ error: 'Falha ao carregar imagens.' });
+    erro.value = "Erro ao carregar paisagens. Tente novamente.";
+    console.error("Erro na API:", error);
+  } finally {
+    loading.value = false;
   }
-}
+}git

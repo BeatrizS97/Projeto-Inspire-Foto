@@ -20,10 +20,13 @@ async function carregarImagens() {
       },
     });
 
-    imagens.value = res.data.results.map((photo) => ({
-      id: photo.id,
-      download_url: photo.urls.regular, // 👈 alta qualidade!
-    }));
+   imagens.value = res.data.results
+  .filter(photo => photo.urls && photo.urls.regular) // só inclui se urls.regular existir
+  .map(photo => ({
+    id: photo.id,
+    download_url: photo.urls.regular,
+  }));
+  
   } catch (error) {
     erro.value = "Erro ao carregar paisagens. Tente novamente.";
     console.error("Erro na API:", error);
