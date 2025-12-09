@@ -10,11 +10,21 @@ const favorito = ref(false);
 function toggleFavorito() {
   favorito.value = !favorito.value;
 }
+
+// Função de fallback: substitui imagem quebrada por uma padrão confiável
+function usarImagemDeFallback(event) {
+  event.target.src = "https://picsum.photos/id/0/600/800?gravity=center";
+}
 </script>
 
 <template>
   <div class="card">
-    <img :src="imagem" :alt="'Paisagem'" class="card-image" />
+    <img 
+      :src="imagem" 
+      :alt="'Paisagem'" 
+      class="card-image"
+      @error="usarImagemDeFallback"
+    />
     <button 
       @click="toggleFavorito" 
       class="favorite-btn"
