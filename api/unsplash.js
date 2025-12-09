@@ -1,13 +1,13 @@
 // /api/unsplash.js
-import axios from 'axios';
+const axios = require('axios');
 
 export default async function handler(req, res) {
-  const { query = 'landscape', orientation = 'landscape', per_page = 12 } = req.query;
-
   try {
-    const CLIENT_ID = process.env.UNSPLASH_CLIENT_ID;
+    const { query = 'landscape', orientation = 'landscape', per_page = 12 } = req.query;
 
+    const CLIENT_ID = process.env.UNSPLASH_CLIENT_ID;
     if (!CLIENT_ID) {
+      console.error('❌ Chave da API do Unsplash não configurada!');
       return res.status(500).json({ error: 'Chave da API do Unsplash não configurada.' });
     }
 
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     res.status(200).json({ results: images });
 
   } catch (error) {
-    console.error('Erro na função:', error.message);
-    res.status(500).json({ error: 'Falha ao carregar imagens. Tente novamente.' });
+    console.error('🚨 Erro na função:', error.message);
+    res.status(500).json({ error: 'Falha ao carregar imagens.' });
   }
 }
