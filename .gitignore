@@ -30,3 +30,18 @@ dist-ssr
 .env.production.local
 .vercel
 .env*.local
+
+# Pastas de IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs e cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Dependências
+node_modules/
