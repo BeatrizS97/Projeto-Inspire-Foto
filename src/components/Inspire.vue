@@ -1,128 +1,91 @@
 <script setup>
-import Card from "./Card.vue";
-import { ref, onMounted } from "vue";
+import Card from './Card.vue'
+import { usePhotos } from '../composables/usePhotos'
 
-const imagens = ref([]);
-const loading = ref(true);
+const emit = defineEmits(['open-photo'])
 
-function carregarImagens() {
-  // Gera 12 seeds aleatórios para garantir variedade
-  const seeds = Array.from({ length: 12 }, (_, i) => Math.floor(Math.random() * 1000) + i);
+const { featured, label, photoUrl } = usePhotos()
 
-  imagens.value = seeds.map((seed, index) => ({
-    id: index + 1,
-    // Usa seed + parâmetro 'gravity=center' para focar no centro
-    download_url: `https://picsum.photos/seed/${seed}/600/800?gravity=center`,
-  }));
-
-  loading.value = false;
-}
-
-onMounted(() => {
-  carregarImagens();
-});
+// Enriquece cada foto com o rótulo legível da categoria
+const photos = featured().map(p => ({
+  ...p,
+  catLabel: label(p.category),
+}))
 </script>
 
 <template>
   <section class="inspire-section">
-    <h2>Inspire-se</h2>
-
-    <div v-if="loading" class="loading">
-      <div class="spinner"></div>
-      <p>Carregando paisagens inspiradoras...</p>
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">Destaques</p>
+        <h2>Inspire-se</h2>
+      </div>
+      <p class="section-desc">
+        Uma seleção de frames que capturam a essência de cada lugar.
+      </p>
     </div>
 
-    <div v-else class="inspire-grid">
+    <div class="inspire-grid">
       <Card
-        v-for="img in imagens"
-        :key="img.id"
-        :imagem="img.download_url"
+        v-for="photo in photos"
+        :key="photo.id"
+        :photo="photo"
+        @open="$emit('open-photo', photo)"
       />
     </div>
   </section>
 </template>
 
 <style scoped lang="scss">
-/* Seu CSS permanece exatamente igual */
 .inspire-section {
-  padding: 3rem 2rem;
+  padding: 4rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2.5rem;
+  gap: 2rem;
+
+  .eyebrow {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
 
   h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 2rem 0;
+    font-family: 'Georgia', serif;
+    font-size: 2.1rem;
+    font-weight: 400;
+    color: var(--ink);
   }
 
-  .loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 0;
-    gap: 1rem;
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #e1306c;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    p {
-      color: #666;
-      font-size: 1.1rem;
-    }
-  }
-
-  .inspire-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
+  .section-desc {
+    font-size: 0.88rem;
+    color: var(--subtle);
+    max-width: 260px;
+    text-align: right;
+    line-height: 1.65;
   }
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.inspire-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.1rem;
 }
 
-@media (max-width: 1200px) {
-  .inspire-section {
-    .inspire-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.2rem;
-    }
-    h2 { font-size: 2.2rem; }
-  }
-}
-
+@media (max-width: 1200px) { .inspire-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) {
-  .insire-section {
-    padding: 2rem 1rem;
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-    }
-    .inspire-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-    }
-  }
+  .inspire-section { padding: 3rem 1rem; }
+  .section-header  { flex-direction: column; align-items: flex-start; }
+  .section-header .section-desc { text-align: left; max-width: 100%; }
+  .inspire-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
 }
-
-@media (max-width: 480px) {
-  .inspire-section {
-    padding: 1.5rem 1rem;
-    h2 { font-size: 1.5rem; }
-    .inspire-grid {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-  }
-}
+@media (max-width: 480px) { .inspire-grid { grid-template-columns: 1fr; } }
 </style>
