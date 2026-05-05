@@ -1,129 +1,192 @@
 <script setup>
-import { ref } from "vue";
+import { useFavorites } from '../composables/useFavorites'
+import { photoUrl } from '../composables/usePhotos'
 
 const props = defineProps({
-  imagem: String,
-});
+  photo: { type: Object, required: true },
+})
 
-const favorito = ref(false);
+const emit = defineEmits(['open'])
 
-function toggleFavorito() {
-  favorito.value = !favorito.value;
+const { isFavorite, toggle } = useFavorites()
+
+function handleFav(e) {
+  e.stopPropagation()
+  toggle(props.photo.id)
 }
 
-// Função de fallback: substitui imagem quebrada por uma padrão confiável
-function usarImagemDeFallback(event) {
-  event.target.src = "https://picsum.photos/id/0/600/800?gravity=center";
+function onError(e) {
+  e.target.src = `https://picsum.photos/seed/fallback/600/800`
 }
 </script>
 
 <template>
-  <div class="card">
-    <img 
-      :src="imagem" 
-      :alt="'Paisagem'" 
-      class="card-image"
-      @error="usarImagemDeFallback"
+  <article
+    class="card"
+    @click="$emit('open', photo)"
+    @contextmenu.prevent
+  >
+    <!-- Proteção: bloqueia drag, seleção e clique-direito na imagem -->
+    <div class="shield" @dragstart.prevent @selectstart.prevent />
+
+    <img
+      :src="photoUrl(photo.seed)"
+      :alt="photo.title"
+      class="card-img"
+      draggable="false"
+      @error="onError"
+      @contextmenu.prevent
     />
-    <button 
-      @click="toggleFavorito" 
-      class="favorite-btn"
-      :class="{ active: favorito }"
-      aria-label="Adicionar aos favoritos"
+
+    <!-- Overlay gradiente + metadados -->
+    <div class="card-overlay">
+      <span class="card-cat">{{ photo.catLabel }}</span>
+      <p class="card-title">{{ photo.title }}</p>
+    </div>
+
+    <!-- Botão favoritar: ícone de abertura de diafragma / coração editorial -->
+    <button
+      class="fav-btn"
+      :class="{ active: isFavorite(photo.id) }"
+      :aria-label="isFavorite(photo.id) ? 'Remover dos favoritos' : 'Salvar nos favoritos'"
+      @click="handleFav"
     >
-      <svg 
-        width="24" 
-        height="24" 
-        viewBox="0 0 24 24" 
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path 
-          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" 
-          :fill="favorito ? '#E1306C' : 'white'"
-          stroke="#E1306C"
-          stroke-width="1.5"
+      <!--
+        Ícone customizado: losango suave — mais editorial que um coração genérico.
+        Preenchido quando favoritado.
+      -->
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M10 3 L17 10 L10 17 L3 10 Z"
+          :fill="isFavorite(photo.id) ? '#E1306C' : 'transparent'"
+          stroke="white"
+          stroke-width="1.3"
+          stroke-linejoin="round"
+        />
+        <circle
+          cx="10" cy="10" r="2"
+          :fill="isFavorite(photo.id) ? 'white' : 'rgba(255,255,255,0.6)'"
         />
       </svg>
     </button>
-  </div>
+
+    <!-- Marca d'água discreta -->
+    <span class="watermark" aria-hidden="true">© inspirefoto</span>
+  </article>
 </template>
 
 <style scoped lang="scss">
 .card {
   position: relative;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
-  width: 100%;
   aspect-ratio: 3/4;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: var(--surface);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+
+  &:hover .card-img     { transform: scale(1.04); }
+  &:hover .card-overlay { opacity: 1; }
+  &:hover .fav-btn      { opacity: 1; }
+  &:hover .watermark    { opacity: 0.4; }
+}
+
+.shield {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none; /* cliques passam para o article */
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.55s ease;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+  gap: 0.2rem;
+}
+
+.card-cat {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.6);
+}
+
+.card-title {
+  font-size: 0.82rem;
+  color: white;
+  line-height: 1.3;
+  font-weight: 400;
+}
+
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.32);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.2s, background 0.2s;
+
+  svg { width: 16px; height: 16px; }
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-
-    .favorite-btn {
-      opacity: 1;
-    }
+    background: rgba(0,0,0,0.5);
+    transform: scale(1.08);
   }
 
-  .card-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .favorite-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(8px);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    opacity: 0;
-    transition: all 0.3s ease;
-    z-index: 2;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.5);
-      transform: scale(1.1);
-    }
-
-    &.active {
-      opacity: 1;
-      background: rgba(255, 255, 255, 0.5);
-    }
-
-    svg {
-      width: 22px;
-      height: 22px;
-    }
+  &.active {
+    opacity: 1;
+    background: rgba(225,48,108,0.25);
+    border-color: rgba(225,48,108,0.4);
   }
 }
 
+.watermark {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-size: 0.58rem;
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.12);
+  z-index: 4;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
 @media (max-width: 768px) {
-  .card {
-    aspect-ratio: 1/1;
-
-    .favorite-btn {
-      opacity: 1;
-      width: 36px;
-      height: 36px;
-
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
+  .card { aspect-ratio: 1/1; }
+  .fav-btn { opacity: 1; }
+  .card-overlay { opacity: 1; }
 }
 </style>
