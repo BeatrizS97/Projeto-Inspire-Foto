@@ -1,5 +1,19 @@
+<!-- src/components/Banner.vue -->
 <script setup>
+import { useBannerCarousel } from '../composables/useBannerCarousel'
+
 defineEmits(['navigate'])
+
+const {
+  currentIndex,
+  currentImage,
+  nextImage,
+  isHovering,
+  next,
+  prev,
+  onMouseEnter,
+  onMouseLeave,
+} = useBannerCarousel()
 </script>
 
 <template>
@@ -18,7 +32,6 @@ defineEmits(['navigate'])
       <div class="banner-actions">
         <button class="btn-primary" @click="$emit('navigate', 'gallery')">
           Ver Portfólio
-          <!-- Seta coerente com Gallery.vue -->
           <svg viewBox="0 0 16 10" fill="none" aria-hidden="true">
             <line x1="0" y1="5" x2="13" y2="5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
             <path d="M9 1 L13 5 L9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -31,16 +44,66 @@ defineEmits(['navigate'])
     </div>
 
     <div class="banner-visual">
-      <div class="photo-stack">
+      <div 
+        class="photo-stack"
+        @mouseenter="onMouseEnter"
+        @mouseleave="onMouseLeave"
+      >
+        <!-- Imagem de trás (próxima) -->
         <div class="frame frame-back">
-          <img src="https://picsum.photos/seed/banner2/500/650" alt="" draggable="false" @contextmenu.prevent />
+          <img 
+            :src="`https://picsum.photos/seed/${nextImage.seed}/500/650`" 
+            :alt="nextImage.alt" 
+            draggable="false" 
+            @contextmenu.prevent 
+          />
         </div>
+        
+        <!-- Imagem da frente (atual) -->
         <div class="frame frame-front">
-          <img src="https://picsum.photos/seed/banner1/500/650" alt="Fotografia em destaque" draggable="false" @contextmenu.prevent />
+          <img 
+            :src="`https://picsum.photos/seed/${currentImage.seed}/500/650`" 
+            :alt="currentImage.alt" 
+            draggable="false" 
+            @contextmenu.prevent 
+          />
           <div class="frame-protect" />
         </div>
+
+        <!-- Botões de navegação (invisíveis até hover) -->
+        <button 
+          class="nav-arrow nav-prev"
+          @click="prev"
+          :class="{ visible: isHovering }"
+          aria-label="Imagem anterior"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        
+        <button 
+          class="nav-arrow nav-next"
+          @click="next"
+          :class="{ visible: isHovering }"
+          aria-label="Próxima imagem"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Indicadores de posição -->
+        <div class="indicators">
+          <span 
+            v-for="(img, index) in images" 
+            :key="img.seed"
+            class="indicator"
+            :class="{ active: index === currentIndex }"
+          />
+        </div>
+
         <div class="badge">
-          <!-- Pequeno diafragma mini — coerente com a logo -->
           <svg width="12" height="12" viewBox="0 0 40 40" fill="none">
             <path d="M20 4 C24 4 27 8 26 13 L20 20 L14 13 C13 8 16 4 20 4Z" fill="#E1306C" opacity="0.9"/>
             <path d="M20 4 C24 4 27 8 26 13 L20 20 L14 13 C13 8 16 4 20 4Z" fill="#E1306C" opacity="0.7" transform="rotate(120 20 20)"/>
@@ -157,6 +220,7 @@ defineEmits(['navigate'])
   position: absolute;
   border-radius: 10px;
   overflow: hidden;
+  transition: opacity 0.6s ease, transform 0.6s ease;
 
   img {
     width: 100%;
@@ -173,6 +237,7 @@ defineEmits(['navigate'])
     transform: rotate(4deg) translate(12px, -10px);
     filter: brightness(0.7) saturate(0.7);
     z-index: 1;
+    opacity: 0.8;
   }
 
   &.frame-front {
@@ -187,6 +252,89 @@ defineEmits(['navigate'])
   inset: 0;
   z-index: 3;
   pointer-events: none;
+}
+
+/* Botões de navegação */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: var(--ink);
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: white;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.nav-prev {
+    left: -22px;
+  }
+
+  &.nav-next {
+    right: -22px;
+  }
+}
+
+/* Indicadores */
+.indicators {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-stack:hover .indicators {
+  opacity: 1;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.active {
+    background: white;
+    transform: scale(1.2);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.8);
+  }
 }
 
 .badge {
@@ -233,10 +381,25 @@ defineEmits(['navigate'])
   .banner { grid-template-columns: 1fr; padding: 3rem 2rem; }
   .banner-visual { align-items: center; }
   .photo-stack { width: min(360px, 100%); }
+  
+  .nav-arrow {
+    &.nav-prev { left: -18px; }
+    &.nav-next { right: -18px; }
+  }
 }
 
 @media (max-width: 480px) {
   .banner { padding: 2rem 1rem; gap: 2.5rem; }
   .banner-stats { gap: 0.9rem; padding: 0.75rem 1.25rem; }
+  .photo-stack { width: min(300px, 100%); }
+  
+  .nav-arrow {
+    width: 36px;
+    height: 36px;
+    &.nav-prev { left: -10px; }
+    &.nav-next { right: -10px; }
+    
+    svg { width: 16px; height: 16px; }
+  }
 }
 </style>

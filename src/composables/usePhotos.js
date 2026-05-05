@@ -6,9 +6,9 @@ export const Photos = [
   { id: 'p5', seed: 'lake5',      title: 'Lago espelhado',      category: 'paisagens' },
   { id: 'p6', seed: 'desert6',    title: 'Mar de areia',        category: 'paisagens' },
 
-  { id: 'e1', seed: 'event1',     title: 'Instante único',      category: 'eventos'   },
-  { id: 'e2', seed: 'event2',     title: 'Celebração',          category: 'eventos'   },
-  { id: 'e3', seed: 'event3',     title: 'Movimento',           category: 'eventos'   },
+  { id: 'e1', seed: 'event5',     title: 'Instante único',      category: 'eventos'   },
+  { id: 'e2', seed: 'event98',     title: 'Celebração',          category: 'eventos'   },
+  { id: 'e3', seed: 'event10',     title: 'Movimento',           category: 'eventos'   },
   { id: 'e4', seed: 'event4',     title: 'Emoção capturada',    category: 'eventos'   },
 
   { id: 'r1', seed: 'portrait1',  title: 'Olhar distante',      category: 'retratos'  },
