@@ -329,14 +329,159 @@ function subscribe() {
 }
 
 @media (max-width: 1024px) {
-  .footer-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .footer-inner { 
+    grid-template-columns: 1fr; 
+    gap: 3rem; 
+  }
+  
+  .footer-brand {
+    text-align: center;
+    align-items: center;
+  }
+  
+  .social-row {
+    justify-content: center;
+  }
 }
+
 @media (max-width: 768px) {
-  .footer-inner  { padding: 3rem 1.5rem 2.5rem; }
-  .footer-nav    { grid-template-columns: repeat(2, 1fr); }
-  .footer-bottom-inner { flex-direction: column; align-items: flex-start; }
+  .footer-inner { 
+    padding: 3rem 1.5rem 2.5rem; 
+  }
+  
+  .footer-nav {
+    grid-template-columns: repeat(3, 1fr); // Mantém 3 colunas lado a lado
+    gap: 1.5rem;
+  }
+  
+  .nav-col {
+    h4 {
+      font-size: 0.62rem;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.1em;
+    }
+
+    ul {
+      gap: 0.4rem;
+
+      a {
+        font-size: 0.75rem;
+      }
+    }
+    
+    &.newsletter-col {
+      .newsletter-hint {
+        font-size: 0.68rem;
+        margin-bottom: 0.6rem;
+        line-height: 1.4;
+      }
+      
+      .newsletter-form {
+        flex-direction: column;
+        gap: 0.4rem;
+        
+        input {
+          padding: 0.5rem 0.7rem;
+          font-size: 0.75rem;
+        }
+        
+        button {
+          padding: 0.5rem;
+          
+          svg {
+            width: 11px;
+          }
+        }
+      }
+      
+      .success {
+        font-size: 0.65rem;
+      }
+    }
+  }
+  
+  .footer-bottom-inner { 
+    flex-direction: column; 
+    align-items: center;
+    text-align: center;
+    padding: 1.25rem 1rem;
+  }
 }
+
 @media (max-width: 480px) {
-  .footer-nav { grid-template-columns: 1fr; }
+  .footer-inner {
+    padding: 2.5rem 1rem 2rem;
+    gap: 2rem;
+  }
+  
+  .brand-logo {
+    span {
+      font-size: 1.05rem;
+    }
+  }
+  
+  .brand-desc {
+    font-size: 0.75rem;
+  }
+  
+  .social-link {
+    width: 32px;
+    height: 32px;
+    
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+  
+  .footer-nav {
+    grid-template-columns: repeat(3, 1fr); // Continua 3 colunas
+    gap: 1.2rem;
+  }
+  
+  .nav-col {
+    h4 {
+      font-size: 0.6rem;
+      margin-bottom: 0.7rem;
+    }
+    
+    ul {
+      gap: 0.35rem;
+      
+      a {
+        font-size: 0.7rem;
+      }
+    }
+    
+    &.newsletter-col {
+      .newsletter-hint {
+        font-size: 0.65rem;
+      }
+      
+      .newsletter-form {
+        input {
+          font-size: 0.7rem;
+          padding: 0.45rem 0.6rem;
+        }
+        
+        button {
+          padding: 0.45rem;
+          
+          svg {
+            width: 10px;
+          }
+        }
+      }
+    }
+  }
+  
+  .copyright {
+    font-size: 0.65rem;
+  }
+  
+  .legal {
+    font-size: 0.65rem;
+    gap: 0.3rem;
+  }
 }
 </style>

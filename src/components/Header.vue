@@ -18,7 +18,7 @@ function navigate(page) {
   <header class="site-header">
     <div class="header-inner">
 
-      <!-- ── Logo ── -->
+      <!-- ── Logo ─ -->
       <button class="logo" @click="navigate('home')" aria-label="Início">
         <!-- Ícone: diafragma fotográfico estilizado — único, editorial -->
         <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -235,37 +235,66 @@ function navigate(page) {
 
 /* ── Mobile nav ── */
 .mobile-nav {
+  display: none;
+  flex-direction: column;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
 
   &.open {
-    max-height: 220px;
+    display: flex;
+    max-height: 280px;
+    opacity: 1;
     border-top: 1px solid var(--border);
   }
-
-  display: flex;
-  flex-direction: column;
 
   button {
     background: none;
     border: none;
-    padding: 0.8rem 2rem;
+    padding: 1rem 2rem;
     font-size: 1rem;
     color: var(--ink);
     text-align: left;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color 0.2s, background 0.2s;
     border-bottom: 1px solid var(--border);
+    width: 100%;
 
     &:last-child { border-bottom: none; }
-    &:hover { color: var(--accent); }
+    &:hover { 
+      color: var(--accent);
+      background: rgba(225,48,108,0.03);
+    }
   }
 }
 
 @media (max-width: 768px) {
   .desktop-nav, .search-btn { display: none; }
-  .menu-btn { display: flex; }
-  .header-inner { padding: 0.85rem 1.25rem; }
+  .menu-btn { 
+    display: flex;
+    margin-left: auto; // Garante que fique no canto direito
+  }
+  .header-inner { 
+    padding: 0.85rem 1.25rem;
+  }
+  .mobile-nav {
+    button {
+      padding: 1rem 1.25rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .header-inner {
+    padding: 0.75rem 1rem;
+  }
+  .logo-wordmark {
+    font-size: 1.15rem;
+  }
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+  }
 }
 </style>
