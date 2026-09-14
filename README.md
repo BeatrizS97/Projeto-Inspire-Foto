@@ -1,15 +1,14 @@
-```markdown
 # 📸 InspireFoto
 
 > _"Onde a luz encontra a alma do lugar."_
 
-<p align="center">
+<div align="center">
   <img src="https://img.shields.io/badge/Vue_3-Composition_API-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue 3" />
   <img src="https://img.shields.io/badge/Vite-Next_Gen_Build-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/SCSS-Powered-CC6699?style=for-the-badge&logo=sass&logoColor=white" alt="SCSS" />
   <img src="https://img.shields.io/badge/Mobile_First-Responsive-007ACC?style=for-the-badge" alt="Mobile First" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License" />
-</p>
+</div>
 
 ---
 
@@ -19,9 +18,9 @@
 
 ✨ **Destaques:**
 - 🎨 Design editorial com ícones SVG customizados e tipografia Georgia
-- 🔄 Estado global reativo via Composables (`useFavorites`, `usePhotos`)
+-  Estado global reativo via Composables (`useFavorites`, `usePhotos`)
 - 💾 Persistência em `localStorage` para favoritos entre sessões
-- ♿ Acessibilidade: ARIA labels, navegação por teclado e foco visível
+-  Acessibilidade: ARIA labels, navegação por teclado e foco visível
 - 📱 Responsividade mobile-first com breakpoints refinados
 - 🌙 Footer em tema escuro com newsletter reativa e feedback visual
 
@@ -29,7 +28,7 @@
 
 ## ✨ Funcionalidades
 
-### 🖼️ Galeria & Navegação
+### ️ Galeria & Navegação
 - [x] Navegação por abas com estados ativos e transições suaves
 - [x] Filtros por categoria: Paisagens, Eventos, Retratos, Urbano, Natureza
 - [x] Vista "Todas" com seções curadas + vista filtrada em grid completo
@@ -47,7 +46,7 @@
 - [x] Tipografia: Georgia para títulos, system fonts para corpo
 - [x] Animações: `fadeIn`, `rise`, hover states e transições de 200-550ms
 
-### ⚙️ Arquitetura & Performance
+### ️ Arquitetura & Performance
 - [x] Composables isolados: lógica de dados (`usePhotos`) e estado (`useFavorites`)
 - [x] Componentes reutilizáveis: `Card`, `PhotoModal`, `Banner` com props tipadas
 - [x] Proteção de imagem: `@dragstart.prevent`, `@contextmenu.prevent`, `.shield`
@@ -55,7 +54,7 @@
 
 ---
 
-## 🛠️ Stack Tecnológica
+## ️ Stack Tecnológica
 
 | Categoria | Tecnologia |
 |-----------|-----------|
@@ -71,7 +70,7 @@
 
 ## 📦 Estrutura do Projeto
 
-```
+```text
 inspire-fotos/
 ├── public/
 │   └── favicon.ico
@@ -235,7 +234,7 @@ git push origin feat/minha-nova-feature
 ```
 
 ### Padrão de Commits
-```
+```text
 feat(scope): descrição da nova funcionalidade
 fix(scope): correção de bug
 refactor(scope): melhoria de código sem mudar comportamento
@@ -250,20 +249,14 @@ chore(scope): tarefas de manutenção
 
 Este projeto está sob a licença **MIT**. Sinta-se à vontade para usar, modificar e distribuir.
 
-```
-MIT License
-Copyright (c) 2024 InspireFoto
-```
-
 ---
 
-## 👨‍💻 Autor
+## 👨‍ Autor
 
-Desenvolvido com ❤️ e café por **Beatriz Silva**
+Desenvolvido com ❤️ e café por **Beatriz Silva Santos**
 
 > *"Cada frame é uma história silenciosa — explorada, sentida e preservada através da lente de quem enxerga o mundo diferente."*
 
-<p align="center">
-  <sup>⭐ Se este projeto te inspirou, considere dar uma estrela! Sua apoio motiva a evolução contínua.</sup>
-</p>
-```
+<div align="center">
+  <sup>⭐ Se este projeto te inspirou, considere dar uma estrela! Seu apoio motiva a evolução contínua.</sup>
+</div>
